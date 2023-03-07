@@ -1,0 +1,115 @@
+@media only screen and (max-width: 600px) {
+    .pagination.react-bootstrap-table-page-btns-ul {
+        margin: 10px !important;
+    }
+    .react-bootstrap-table-pagination-total {
+        display: none !important;
+    }
+    th, td {
+        font-size: 11px !important;
+    }
+}
+
+.react-bootstrap-table {
+    width: 100% !important;
+    background-color: white !important;
+}
+
+.table.table-bordered {
+    width: 100% !important;
+    padding: 20px !important;
+}
+
+thead {
+    /* border-bottom: 1px #f7cb05; */
+    /* border-color: #adc2a9 !important; */
+    /* border-color: #99a799 !important; */
+}
+
+.react-bs-table-csv-btn.btn.btn-default {
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 252 232 / var(--tw-bg-opacity));
+    border: 0;
+    color: black;
+}
+
+tbody {
+    margin: 0px 20px !important;
+    background-color: white !important;
+}
+
+th {
+    background-color: white !important;
+    font-weight: 500;
+    font-size: 13px;
+    padding-left: 5px !important;
+    /* color: #adc2a9; */
+    color: #99a799;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+tr {
+    border-bottom: 0 !important;
+    box-sizing: none !important;
+    border-width: 0;
+    background-color: #f2f2f2;
+}
+
+td {
+    text-align: left;
+    padding: 8px !important;
+    font-size: 12px;
+    color: #7C7C7C;
+    background-color: white !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.row.react-bootstrap-table-pagination {
+    font-size: 12px;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    color: #7C7C7C;
+}
+
+.pagination.react-bootstrap-table-page-btns-ul {
+    margin-right: 5rem;
+    color: #7C7C7C;
+}
+
+.pagination.react-bootstrap-table-page-btns-ul li {
+    display: inline-flex !important;
+    margin: 10px;
+}
+
+.react-bootstrap-table-pagination-total {
+    margin-top: 5px !important;
+}
+
+.active.page-item {
+    border-radius: 16px;
+    padding: 3px 10px;
+    /* background-color: #adc2a9 !important; */
+    background-color: #99a799 !important;
+    color: white;
+}
+
+.dataTables_length {
+    margin-top: 10px !important;
+}
+
+.table.table-bordered {
+    border-bottom: 2px solid #f7cb05;
+    /* border-bottom: 2px solid #adc2a9; */
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table {
+
+}
