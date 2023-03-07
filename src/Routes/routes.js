@@ -10,11 +10,11 @@ export const loginRoutes = [
 ];
 
 export const adminRoutes = [
-  {
-    component: <Patient />,
-    title: "Patient",
-    path: "patient",
-  },
+//   {
+//     component: <Patient />,
+//     title: "Patient",
+//     path: "patient",
+//   },
   {
     component: <Medicine />,
     title: "Medicine",
