@@ -42,8 +42,8 @@ function Login() {
 
   const registerDisplay = () => {
     return userView === "register" ? (
-      <form class="form-control flex flex-col gap-2 w-full">
-        <div className="text-3xl text-gray-600 font-bold">
+      <form class="form-control flex flex-col gap-1 w-full">
+        <div className="text-xl text-gray-600 font-bold">
           Create An Account
         </div>
         <hr />
@@ -139,7 +139,7 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
-      <div className="flex justify-center items-center border-t-4 bg-white border-yellow-300 p-10 shadow-lg">
+      <div className="flex justify-center items-center border-t-4 bg-white border-yellow-300 p-6 shadow-lg">
         {loginDisplay()}
         {registerDisplay()}
       </div>

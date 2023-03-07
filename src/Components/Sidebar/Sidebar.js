@@ -11,7 +11,7 @@ function Sidebar() {
       const pathClass =
         item.path === pathname?.slice(7)
           ? "bg-yellow-500 rounded-md text-white"
-          : "bg-yellow-200 rounded-md";
+          : "bg-yellow-100 rounded-md";
 
       return (
         <li key={index} className="my-2">
@@ -33,23 +33,21 @@ function Sidebar() {
 
   return (
     <div className="flex flex-col md:flex-row lg:flex-row min-h-screen">
-      <div className="basis-56 hidden md:hidden lg:block shadow-xl">
-        <div className=" pl-8 pr-5 pt-8">
+      <div className="basis-56 hidden md:hidden lg:block shadow-xl py-5 bg-yellow-200">
+        <div>
           <div className="relative">
-            <ul className="overflow-y-auto">
-              <li className="mb-5">
-                <div>
-                  <section className="flex justify-center align-center">
-                    <figure className="flex relative">
-                      <div className="m-auto">
-                        <div className="text-xl text-black font-bold">
-                          HOSPITAL MANAGEMENT SYSTEM
-                        </div>
-                      </div>
-                    </figure>
-                  </section>
-                </div>
-              </li>
+            <div className="">
+              <section className="flex justify-center align-center">
+                <figure className="flex relative">
+                  <div className="m-auto p-2">
+                    <div className="text-lg text-yellow-800 font-semibold ">
+                      Hospital Inventory System
+                    </div>
+                  </div>
+                </figure>
+              </section>
+            </div>
+            <ul className="overflow-y-auto px-2 py-4">
               {adminRoutes.length > 0 && adminRoutes.map(adminRouting)}
             </ul>
           </div>
