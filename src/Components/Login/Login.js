@@ -29,7 +29,12 @@ function Login() {
           >
             Register
           </button>
-          <button class="btn bg-yellow-500 text-white border-0">Login</button>
+          <Link
+            class="btn bg-yellow-500 text-white border-0"
+            to="/admin/medicine"
+          >
+            Login
+          </Link>
         </div>
       </form>
     ) : null;
