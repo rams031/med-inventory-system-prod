@@ -1,6 +1,6 @@
 import Login from "../Components/Login/Login";
 import Medicine from "../Components/Medicine/Medicine";
-// import Patient from "../Components/Patient/Patient";
+import Patient from "../Components/Patient/Patient";
 
 export const loginRoutes = [
   {
