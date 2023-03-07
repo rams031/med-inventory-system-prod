@@ -1,0 +1,19 @@
+2023-03-07 09:01:43 info: tempDirectory:c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\temp
+2023-03-07 09:01:43 info: Extraction complete for source: c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\resources\embold-scanner-archive.zip, destination: c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\temp
+2023-03-07 09:01:43 info: Congratulations, your extension "Embold" is now active!
+2023-03-07 09:25:46 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-07 09:25:46 error: SQLITE_ERROR: no such table: issues
+2023-03-07 09:25:50 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/src/Components/Login.js
+2023-03-07 09:25:50 error: SQLITE_ERROR: no such table: issues
+2023-03-07 09:26:31 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-07 09:26:31 error: SQLITE_ERROR: no such table: issues
+2023-03-07 09:26:42 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-07 09:26:42 error: SQLITE_ERROR: no such table: issues
+2023-03-07 09:39:51 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-07 09:39:51 error: SQLITE_ERROR: no such table: issues
+2023-03-07 10:36:47 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/src/Components/Sidebar.js
+2023-03-07 10:36:47 error: SQLITE_ERROR: no such table: issues
+2023-03-07 10:36:54 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/src/Components/Sidebar/Sidebar.js
+2023-03-07 10:36:54 error: SQLITE_ERROR: no such table: issues
+2023-03-07 10:59:04 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-07 10:59:05 error: SQLITE_ERROR: no such table: issues
