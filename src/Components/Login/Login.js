@@ -88,18 +88,6 @@ function Login() {
                 <option>Female</option>
               </select>
             </div>
-            <div>
-              <label class="label">
-                <span class="label-text">Position</span>
-              </label>
-              <select class="formSelect">
-                <option disabled selected>
-                  Pick one
-                </option>
-                <option>Nurse</option>
-                <option>Staff</option>
-              </select>
-            </div>
           </div>
           <div>
             <div>
