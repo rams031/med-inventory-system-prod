@@ -44,6 +44,11 @@ const Table = ({
       <div className="rounded-b-md mt-5 rounded-md bg-white pb-5 px-5 shadow-md">
         <div className="flex flex-row w-full justify-between ">
           <div className="flex flex-row">
+            <div className="flex flex-row gap-3 items-center">
+              <div>
+                {SearchBar ? <SearchBar {...props.searchProps} /> : null}
+              </div>
+            </div>
             <div className="hidden md:flex lg:flex w-full justify-end mt-4 lg:my-4 lg:mx-0 md:my-4 md:mx-0 ">
               {DateFilter ? <DateFilter /> : null}
             </div>
@@ -139,22 +144,3 @@ const Table = ({
 };
 
 export default React.memo(Table);
-
-{
-  /* <div className="flex flex-row gap-3 items-center">
-<div className="flex items-center justify-center mb-2"> */
-}
-{
-  /* <BiFilter className="h-7 w-7 text-gray-600" /> */
-}
-{
-  /* </div>
-<div> */
-}
-{
-  /* {SearchBar ? <SearchBar {...props.searchProps} /> : null} */
-}
-// </div>
-{
-  /* </div> */
-}

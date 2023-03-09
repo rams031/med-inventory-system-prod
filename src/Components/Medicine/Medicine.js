@@ -88,7 +88,11 @@ function Medicine() {
           TableData={medicineList}
           Columns={medicineColumn}
           TableTitle={"Medicine"}
-          //   AddButton={addCategoryButton}
+          AddButton={() =>
+            <label for="my-modal" class="btn bg-yellow-600">
+              open modal
+            </label>
+          }
           //   refreshOption={renderGlobalData}
         />
       </div>

@@ -60,7 +60,8 @@ tr {
 td {
     text-align: left;
     padding: 8px !important;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 600;
     color: #7C7C7C;
     background-color: white !important;
     -webkit-font-smoothing: antialiased;
