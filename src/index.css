@@ -2,17 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { font-family: 'Inter', sans-serif; }
+* { font-family: 'Inter', sans-serif; }
 @supports (font-variation-settings: normal) {
-  :root { font-family: 'Inter var', sans-serif; }
+* { font-family: 'Inter var', sans-serif; }
+}
+
+.App {
+  text-align: none !important
 }
 
 .formInput {
   @apply input input-bordered w-96 max-w-xs text-black placeholder-gray-600 bg-white;
 }
 
+.formInputModal {
+  @apply input input-bordered w-full text-gray-500 placeholder-gray-400 bg-white;
+}
+
 .formSelect {
   @apply select select-bordered w-full text-gray-400  bg-white;
+}
+
+.modalButton { 
+  @apply btn btn-md bg-yellow-600 border-0 capitalize shadow-lg;
 }
 
 
