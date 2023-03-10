@@ -40,7 +40,7 @@ function Sidebar() {
               <section className="flex justify-center align-center">
                 <figure className="flex relative">
                   <div className="m-auto p-2">
-                    <div className="text-lg text-yellow-800 font-semibold ">
+                    <div className="text-lg  text-center text-yellow-800 font-semibold ">
                       Hospital Inventory System
                     </div>
                   </div>
