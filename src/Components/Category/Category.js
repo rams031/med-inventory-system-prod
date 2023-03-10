@@ -78,7 +78,6 @@ function Category() {
     const params = {
       categoryId: id,
     };
-    console.log(`params:`, params);
 
     await postApiData("/category/delete", params).then((res) => {
       const { status } = res || {};

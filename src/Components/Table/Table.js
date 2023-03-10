@@ -123,7 +123,7 @@ const Table = ({
         keyField="dataField"
         data={TableData}
         columns={Columns}
-        noDataIndication={"No Result"}
+        noDataIndication={"Test"}
         exportCSV={{
           fileName: `${TableTitle}.csv`,
           blobType: "text/plain;charset=utf-8",
