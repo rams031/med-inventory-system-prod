@@ -1,5 +1,5 @@
 import { Route } from "react-router";
-import { loginRoutes, adminRoutes } from "./../Routes/routes";
+import { loginRoutes, adminRoutes, accessRoutes } from "./../Routes/routes";
 import React, { Suspense } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
 
@@ -28,7 +28,32 @@ export const LoginRoutes =
     );
   });
 
-export const managementRoutes = (
+export const AccessRoutes = (
+  accessRoutes.length > 0 &&
+  accessRoutes.map((item, index) => {
+    return (
+      <>
+        <Route
+          key={index}
+          path={item.path}
+          element={
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex justify-center align-items h-full">
+                  Loading...
+                </div>
+              }
+            >
+              {item.component ? item.component : null}
+            </Suspense>
+          }
+        />
+      </>
+    );
+  })
+);
+
+export const ManagementRoutes = (
   <Route
     path="admin"
     element={

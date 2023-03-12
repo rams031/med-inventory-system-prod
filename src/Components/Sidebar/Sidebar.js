@@ -1,8 +1,9 @@
 import React from "react";
 import { adminRoutes } from "./../../Routes/routes";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const adminRouting = (item, index) => {
@@ -34,9 +35,9 @@ function Sidebar() {
   return (
     <div className="flex flex-col md:flex-row lg:flex-row min-h-screen">
       <div className="basis-56 hidden md:hidden lg:block shadow-xl py-5 bg-yellow-200">
-        <div>
-          <div className="relative">
-            <div className="">
+        <div className="flex flex-col h-full">
+          <div className="grow relative">
+            <div>
               <section className="flex justify-center align-center">
                 <figure className="flex relative">
                   <div className="m-auto p-2">
@@ -47,9 +48,23 @@ function Sidebar() {
                 </figure>
               </section>
             </div>
-            <ul className="overflow-y-auto px-2 py-4">
-              {adminRoutes.length > 0 && adminRoutes.map(adminRouting)}
-            </ul>
+            <div>
+              <ul className="overflow-y-auto px-2 py-4">
+                {adminRoutes.length > 0 && adminRoutes.map(adminRouting)}
+              </ul>
+            </div>
+          </div>
+          <div className="px-2 py-4">
+            <div className="bg-yellow-100 rounded-md text-black" onClick={() => {
+              localStorage.clear();
+              return navigate('/');
+            }}>
+              <div className="flex flex-row text-center justify-center text-yellow-700 items-center cursor-pointer h-10 px-4 rounded-lg hover:bg-yellow-700 hover:text-white   hover:rounded-md">
+                <span className=" text-sm tracking-wide text-center  font-semibold">
+                  Log Out
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
