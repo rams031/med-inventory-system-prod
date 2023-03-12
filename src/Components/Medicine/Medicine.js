@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { PencilAltIcon, TrashIcon, EyeIcon } from "@heroicons/react/outline";
-import { CloudinaryContext, useCloudinaryUpload } from "@cloudinary/react";
-import { Cloudinary } from "@cloudinary/base";
+import { EyeIcon } from "@heroicons/react/outline";
+import QRCode from "react-qr-code";
+import axios from "axios";
 
 // Components
 import {
-  deleteApiData,
   getApiData,
   postApiData,
-  putApiData,
   toastAlert,
 } from "../../Service/Service";
 import Table from "../Table/Table";
-import axios from "axios";
-import QRCode from "react-qr-code";
+import QRUrl from "../../Service/Network";
 
 function Medicine() {
   // Form Object
@@ -46,7 +43,6 @@ function Medicine() {
   // HTTP Action
   const getMedicineDataAction = async () => {
     await getApiData("/medicine").then(({ status, data }) => {
-      console.log("dat medicinea", data);
       if (status === 200) return setMedicineData(data);
     });
   };
@@ -122,7 +118,6 @@ function Medicine() {
     const params = {
       medicineId: id,
     };
-    console.log(`params:`, params);
 
     await postApiData("/medicine/delete", params).then((res) => {
       const { status } = res || {};
@@ -344,14 +339,12 @@ function Medicine() {
         reference_no,
         description } = formValues || {};
       
-      const cloudRootUrl = "https://wonderful-empanada-087c84.netlify.app/"
-      const localRootUrl = "http://192.168.1.13:3000/"
-      const scannerURL = `${cloudRootUrl}/medicinedetails?image=${image}&name=${name}&categoryName=${categoryName}&strength=${strength}&expiration=${expiration}&quantity=${quantity}&reference_no=${reference_no}&description=${description}`;
+      const scannerURL = `${QRUrl}/medicinedetails?image=${image}&name=${name}&categoryName=${categoryName}&strength=${strength}&expiration=${expiration}&quantity=${quantity}&reference_no=${reference_no}&description=${description}`;
 
       return modalType === "view" ? (
-        <div className="flex flex-row gap-5 p-5">
+        <div className="flex flex-row gap-10 p-10">
           <div className="flex flex-col">
-            <div className="flex justify-start text-lg font-bold text-yellow-500 pb-5">View Medicine Information</div>
+            <div className="flex justify-start text-xl font-bold text-yellow-500 pb-5">View Medicine Information</div>
             <div className="text-gray-500">Medicine Name: {name ?? "--"}</div>
             <div className="text-gray-500">Category Name: {categoryName ?? "--"}</div>
             <div className="text-gray-500">Reference No: {reference_no ?? "--"}</div>
@@ -364,13 +357,13 @@ function Medicine() {
           <div className="flex flex-col gap-6 justify-center items-center">
             <div>
               <QRCode
-                size={100}
+                size={150}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                 value={scannerURL}
                 viewBox={`0 0 256 256`}
               />
             </div>
-            <img src={image} width="100" height="100" />
+            <img src={image} width="150" height="150" />
           </div>
         </div>
 

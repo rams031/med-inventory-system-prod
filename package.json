@@ -15,6 +15,7 @@
     "cloudinary": "^1.35.0",
     "daisyui": "^2.51.3",
     "i": "^0.3.7",
+    "local-ip-address": "^1.0.0",
     "npm": "^9.6.1",
     "react": "^18.2.0",
     "react-bootstrap-table-next": "^4.0.3",
