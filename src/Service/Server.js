@@ -1,7 +1,7 @@
 // Localhost (Local Machine Server)
-// export default `http://localhost:3001/`;
+export default `http://localhost:3001/`;
 
 // Cloud
-export default `https://medical-inventory-service.onrender.com/`;
+// export default `https://medical-inventory-service.onrender.com/`;
 
 

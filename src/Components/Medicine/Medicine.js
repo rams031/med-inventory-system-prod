@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { EyeIcon } from "@heroicons/react/outline";
+import { EyeIcon, InboxInIcon } from "@heroicons/react/outline";
 import QRCode from "react-qr-code";
 import axios from "axios";
 
 // Components
-import {
-  getApiData,
-  postApiData,
-  toastAlert,
-} from "../../Service/Service";
+import { getApiData, postApiData, toastAlert } from "../../Service/Service";
 import Table from "../Table/Table";
 import QRUrl from "../../Service/Network";
 
 function Medicine() {
+  const clientName = localStorage.getItem("name");
   // Form Object
   const formObject = {
     name: "",
     reference_no: "",
     category_id: "",
     expiration: "",
-    quantity: "",
+    quantity: 0,
     strength: "",
     description: "",
     image: "",
+    clientName,
   };
 
-  // Local State
+  const salesFormObject = {
+    ...formObject,
+    deductQuantity: "",
+  };
+
+  // Local State // dito nilalagay yung mga var
+  const [salesFormValues, setSalesFormValues] = useState(salesFormObject);
+  console.log(`salesFormValues:`, salesFormValues);
   const [formValues, setFormValues] = useState(formObject);
   const [medicineData, setMedicineData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -35,6 +40,7 @@ function Medicine() {
   const [imagePath, setImagePath] = useState("");
   const [image, setImage] = useState([]);
 
+  // ito yung una mag loload pag bukas
   useEffect(() => {
     getMedicineDataAction();
     getCategoryDataAction();
@@ -53,7 +59,7 @@ function Medicine() {
     });
   };
 
-  // newMedicineAction
+  // dito naman yung coconect sya sa server tapos gagawa action query
   const validateImage = async (e) => {
     e.preventDefault();
     if (!image) return;
@@ -130,6 +136,25 @@ function Medicine() {
     return false;
   };
 
+  const deductMedicineAction = async (e) => {
+    e.preventDefault();
+    const { id, deductQuantity } = salesFormValues || {};
+
+    const params = { id, deductQuantity, clientName };
+
+    await postApiData("/medicine/deduct", params)
+      .then(({ status }) => {
+        if (status === 200) {
+          setIsOpen(false);
+          getMedicineDataAction();
+          toastAlert("success", "Medicine Deducted Successfully");
+          return setSalesFormValues(salesFormObject);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // dito pagnagtype nasasave sa var ang data
   const inputOnChange = (e) => {
     const {
       target: { value, name },
@@ -138,14 +163,22 @@ function Medicine() {
     return setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const modalDisplay = () => {
+  const salesInputOnChange = (e) => {
+    const {
+      target: { value, name },
+    } = e || {};
 
+    return setSalesFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const modalDisplay = () => {
+    // dito yung add modal display
     const addModal = () => {
       return modalType === "add" ? (
         <div className="flex flex-col">
           <div className="flex text-lg font-semibold text-yellow-500">
             {modalType === "add" ? "Add New" : "Edit"} Medicine
-              </div>
+          </div>
           <form
             onSubmit={
               modalType === "add" ? validateImage : updateMedicineAction
@@ -194,7 +227,7 @@ function Medicine() {
                 >
                   <option disabled selected>
                     Pick one
-                      </option>
+                  </option>
                   {categoryData &&
                     categoryData.map(({ name, id }, index) => (
                       <option key={index} value={id}>
@@ -289,9 +322,7 @@ function Medicine() {
                       className="file-input file-input-bordered file-input-warning w-full max-w-xs"
                       accept="image/*"
                       onChange={(e) => {
-                        setImagePath(
-                          URL.createObjectURL(e.target.files[0])
-                        );
+                        setImagePath(URL.createObjectURL(e.target.files[0]));
                         return setImage(e.target.files[0]);
                       }}
                       required
@@ -318,40 +349,53 @@ function Medicine() {
                   }}
                 >
                   Cancel
-                    </button>
+                </button>
                 <button type="submit" className="modalButton">
                   Submit
-                    </button>
+                </button>
               </div>
             </div>
           </form>
         </div>
-      ) : null
-    }
+      ) : null;
+    };
 
+    // dito naman yung sa view
     const viewModal = () => {
-      const { image,
+      const {
+        image,
         name,
         categoryName,
         strength,
         expiration,
         quantity,
         reference_no,
-        description } = formValues || {};
-      
+        description,
+      } = formValues || {};
+
       const scannerURL = `${QRUrl}/medicinedetails?image=${image}&name=${name}&categoryName=${categoryName}&strength=${strength}&expiration=${expiration}&quantity=${quantity}&reference_no=${reference_no}&description=${description}`;
 
       return modalType === "view" ? (
         <div className="flex flex-row gap-10 p-10">
           <div className="flex flex-col">
-            <div className="flex justify-start text-xl font-bold text-yellow-500 pb-5">View Medicine Information</div>
+            <div className="flex justify-start text-xl font-bold text-yellow-500 pb-5">
+              View Medicine Information
+            </div>
             <div className="text-gray-500">Medicine Name: {name ?? "--"}</div>
-            <div className="text-gray-500">Category Name: {categoryName ?? "--"}</div>
-            <div className="text-gray-500">Reference No: {reference_no ?? "--"}</div>
+            <div className="text-gray-500">
+              Category Name: {categoryName ?? "--"}
+            </div>
+            <div className="text-gray-500">
+              Reference No: {reference_no ?? "--"}
+            </div>
             <div className="text-gray-500">Strength: {strength ?? "--"}</div>
-            <div className="text-gray-500">Expiration: {expiration ?? "--"}</div>
+            <div className="text-gray-500">
+              Expiration: {expiration ?? "--"}
+            </div>
             <div className="text-gray-500">Quantity: {quantity ?? "--"}</div>
-            <div className="text-gray-500">Ingredients: {description ?? "--"}</div>
+            <div className="text-gray-500">
+              Ingredients: {description ?? "--"}
+            </div>
             {/* <div className="text-gray-500">{scannerURL}</div> */}
           </div>
           <div className="flex flex-col gap-6 justify-center items-center">
@@ -363,13 +407,121 @@ function Medicine() {
                 viewBox={`0 0 256 256`}
               />
             </div>
-            <img src={image} width="150" height="150" />
+            <img src={image} width="150" alt="none" height="150" />
           </div>
         </div>
+      ) : null;
+    };
 
+    const consumeViewModal = () => {
+      const {
+        image,
+        name,
+        categoryName,
+        strength,
+        expiration,
+        quantity,
+        reference_no,
+        description,
+      } = salesFormValues || {};
 
-      ) : null
-    }
+      const displayMedicineDetails = () => {
+        return salesFormValues?.id ? (
+          <div className="py-4">
+            <div className="text-yellow-800 text-sm font-bold">
+              <span className="text-sm font-semibold text-yellow-600">
+                Category Name:
+              </span>{" "}
+              {categoryName ?? "--"}
+            </div>
+            <div className="text-yellow-800 text-sm font-bold">
+              <span className="text-sm font-semibold text-yellow-600">
+                Strength:
+              </span>{" "}
+              {strength ?? "--"}
+            </div>
+            <div className="text-yellow-800 text-sm font-bold">
+              <span className="text-sm font-semibold text-yellow-600">
+                Reference No:
+              </span>{" "}
+              {reference_no ?? "--"}
+            </div>
+            <div className="text-yellow-800 text-sm font-bold">
+              <span className="text-sm font-semibold text-yellow-600">
+                Quantity:
+              </span>{" "}
+              {quantity ?? "--"}
+            </div>
+          </div>
+        ) : null;
+      };
+
+      return modalType === "consume" ? (
+        <div className="flex flex-col p-3">
+          <div className="flex text-lg font-semibold text-yellow-500">
+            Take Medicine
+          </div>
+          <div>
+            <form onSubmit={deductMedicineAction}>
+              <div>
+                <label class="label">
+                  <span class="label-text">Medicine</span>
+                </label>
+                <select
+                  name="id"
+                  class="formSelect"
+                  // value={salesFormValues?.name}
+                  onChange={(e) =>
+                    setSalesFormValues({
+                      ...salesFormValues,
+                      ...JSON.parse(e.target.value),
+                    })
+                  }
+                  required
+                >
+                  <option disabled selected>
+                    Pick Medicine
+                  </option>
+                  {medicineData &&
+                    medicineData.map((item) => {
+                      return (
+                        <option key={item?.id} value={JSON.stringify(item)}>
+                          {item?.name ?? null}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+              {displayMedicineDetails()}
+              <div>
+                <label class="label">
+                  <span class="label-text">Quantity</span>
+                </label>
+                <input
+                  name="deductQuantity"
+                  type="number"
+                  placeholder="Quantity"
+                  max={salesFormValues.quantity}
+                  class="formInputModal w-full"
+                  value={salesFormValues?.deductQuantity}
+                  onChange={salesInputOnChange}
+                  required
+                />
+              </div>
+              <div className="flex justify-end pt-4">
+                <button
+                  type="submit"
+                  className="btn bg-yellow-500 text-white border-0"
+                >
+                  Take Medicine
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : null;
+    };
+
     return (
       <Dialog
         open={isOpen}
@@ -381,6 +533,7 @@ function Medicine() {
           <Dialog.Panel className="w-auto bg-white rounded-md p-5 shadow-lg">
             {addModal()}
             {viewModal()}
+            {consumeViewModal()}
           </Dialog.Panel>
         </div>
       </Dialog>
@@ -389,16 +542,32 @@ function Medicine() {
 
   const AddButton = () => {
     return (
-      <button
-        href="#my-modal"
-        class="modalButton"
-        onClick={() => {
-          setModalType("add");
-          return setIsOpen(!isOpen);
-        }}
-      >
-        Add Medicine
-      </button>
+      <div className="flex flex-row gap-2">
+        <div>
+          <button
+            href="#my-modal"
+            class="modalButton"
+            onClick={() => {
+              setModalType("consume");
+              return setIsOpen(!isOpen);
+            }}
+          >
+            Take Medicine
+          </button>
+        </div>
+        <div>
+          <button
+            href="#my-modal"
+            class="modalButton"
+            onClick={() => {
+              setModalType("add");
+              return setIsOpen(!isOpen);
+            }}
+          >
+            Add Medicine
+          </button>
+        </div>
+      </div>
     );
   };
 
@@ -416,6 +585,7 @@ function Medicine() {
                 style={{
                   overflow: "hidden",
                 }}
+                alt="medicine-photo"
                 src={data ?? null}
               />
             </div>
@@ -433,7 +603,7 @@ function Medicine() {
     },
     {
       dataField: "quantity",
-      text: "Quantity"
+      text: "Quantity",
     },
     {
       dataField: "strength",
@@ -460,11 +630,14 @@ function Medicine() {
               <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
             </div> */}
             <div
+              class="customTooltip"
+              data-tip="View Medicine"
               onClick={() => {
                 setFormValues(row);
                 setModalType("view");
                 return setIsOpen(!isOpen);
-              }}>
+              }}
+            >
               <EyeIcon className="h-5 w-5 text-blue-500 cursor-pointer hover:shadow-lg" />
             </div>
           </div>

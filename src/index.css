@@ -12,7 +12,7 @@
 }
 
 .formInput {
-  @apply input input-bordered w-96 max-w-xs text-black placeholder-gray-600 bg-white;
+  @apply input input-bordered w-96 max-w-xs text-black placeholder-gray-800 bg-white;
 }
 
 .formInputModal {
@@ -27,7 +27,9 @@
   @apply btn btn-md bg-yellow-600 border-0 capitalize shadow-lg;
 }
 
-
+.customTooltip {
+  @apply tooltip tooltip-open tooltip-warning
+}
 
 body {
   margin: 0;

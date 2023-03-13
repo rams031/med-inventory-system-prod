@@ -6,8 +6,8 @@ function Sidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  // Ito po yung sa routing (function nito idisplay ung html)
   const adminRouting = (item, index) => {
-    console.log(`item:`, item);
     const navigationPath = () => {
       const pathClass =
         item.path === pathname?.slice(7)

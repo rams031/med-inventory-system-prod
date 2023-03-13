@@ -14,6 +14,7 @@ import { PrinterIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 
+// Ito yuhg already made na table (please wag ito galawin)
 const Table = ({
   TableData,
   Columns,
@@ -40,8 +41,6 @@ const Table = ({
   };
 
   const table = (props) => {
-    console.log("props tabledata", props.baseProps.data)
-
     const withData = () => {
       return props.baseProps.data ? (
         <div className="rounded-b-md mt-5 rounded-md bg-white pb-5 px-5 shadow-md">
