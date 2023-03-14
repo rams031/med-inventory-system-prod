@@ -124,3 +124,14 @@
 2023-03-09 15:34:57 error: SQLITE_ERROR: no such table: issues
 2023-03-09 15:35:08 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/.git/index.lock
 2023-03-09 15:35:08 error: SQLITE_ERROR: no such table: issues
+2023-03-14 08:25:50 info: tempDirectory:c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\temp
+2023-03-14 08:25:50 info: Extraction complete for source: c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\resources\embold-scanner-archive.zip, destination: c:\Users\Xypher Solutions Inc\.vscode\extensions\embold-vscode.embold-0.1.4\temp
+2023-03-14 08:25:50 info: Congratulations, your extension "Embold" is now active!
+2023-03-14 08:25:58 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/.git/refs/remotes/origin/main.lock
+2023-03-14 08:25:58 error: SQLITE_ERROR: no such table: issues
+2023-03-14 13:31:39 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/node_modules/fsevents
+2023-03-14 13:31:39 error: SQLITE_ERROR: no such table: issues
+2023-03-14 14:30:08 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/.git/index.lock
+2023-03-14 14:30:08 error: SQLITE_ERROR: no such table: issues
+2023-03-14 14:30:56 info: file:///c%3A/Users/Xypher%20Solutions%20Inc/Desktop/medical-inventory-system/.git/index.lock
+2023-03-14 14:30:56 error: SQLITE_ERROR: no such table: issues
