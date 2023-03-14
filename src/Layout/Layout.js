@@ -1,7 +1,8 @@
-import { Route } from "react-router";
+import { Navigate, Route } from "react-router";
 import { loginRoutes, adminRoutes, accessRoutes } from "./../Routes/routes";
 import React, { Suspense } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
+import { AdminRestriction, LoginRestriction } from "./../HOC/RouteRestriction";
 
 // Account Login Navigation
 export const LoginRoutes =
@@ -20,7 +21,9 @@ export const LoginRoutes =
                 </div>
               }
             >
-              {item.component ? item.component : null}
+              <LoginRestriction>
+                {item.component ? item.component : null}
+              </LoginRestriction>
             </Suspense>
           }
         />
@@ -28,7 +31,7 @@ export const LoginRoutes =
     );
   });
 
-export const AccessRoutes = (
+export const AccessRoutes =
   accessRoutes.length > 0 &&
   accessRoutes.map((item, index) => {
     return (
@@ -50,8 +53,7 @@ export const AccessRoutes = (
         />
       </>
     );
-  })
-);
+  });
 
 export const ManagementRoutes = (
   <Route
@@ -84,7 +86,9 @@ export const ManagementRoutes = (
                     </div>
                   }
                 >
-                  {item.component && item?.component}
+                  <AdminRestriction>
+                    {item.component && item?.component}
+                  </AdminRestriction>
                 </React.Suspense>
               }
             />
@@ -102,9 +106,7 @@ export const ManagementRoutes = (
             </div>
           }
         >
-          <div className="min-h-screen flex justify-center align-items h-full">
-            PAGE NOT FOUND
-          </div>
+          <Navigate to="/admin/medicine" />
         </React.Suspense>
       }
     />

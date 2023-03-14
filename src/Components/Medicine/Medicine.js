@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { EyeIcon, InboxInIcon } from "@heroicons/react/outline";
+import {
+  EyeIcon,
+  InboxInIcon,
+  PencilAltIcon,
+  TrashIcon,
+} from "@heroicons/react/outline";
 import QRCode from "react-qr-code";
 import axios from "axios";
 
 // Components
-import { getApiData, postApiData, toastAlert } from "../../Service/Service";
+import {
+  dialogAlert,
+  getApiData,
+  postApiData,
+  toastAlert,
+} from "../../Service/Service";
 import Table from "../Table/Table";
 import QRUrl from "../../Service/Network";
+import { saveImageToCloud } from "../../Service/Cloud";
+import Swal from "sweetalert2";
 
 function Medicine() {
   const clientName = localStorage.getItem("name");
@@ -31,7 +43,6 @@ function Medicine() {
 
   // Local State // dito nilalagay yung mga var
   const [salesFormValues, setSalesFormValues] = useState(salesFormObject);
-  console.log(`salesFormValues:`, salesFormValues);
   const [formValues, setFormValues] = useState(formObject);
   const [medicineData, setMedicineData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -59,55 +70,44 @@ function Medicine() {
     });
   };
 
-  // dito naman yung coconect sya sa server tapos gagawa action query
-  const validateImage = async (e) => {
+  const newMedicineAction = async (e) => {
     e.preventDefault();
-    if (!image) return;
+    const cloudinary = await saveImageToCloud(image);
 
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", "isrscr1n");
+    if (cloudinary) {
+      const params = {
+        ...formValues,
+        image: cloudinary,
+      };
 
-    await axios
-      .post(`https://api.cloudinary.com/v1_1/ddr0lfrjj/image/upload`, formData)
-      .then(({ status, data }) => {
-        if (status === 200 && data) {
-          const { secure_url } = data || {};
-          return newMedicineAction(secure_url);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const newMedicineAction = async (image) => {
-    const params = {
-      ...formValues,
-      image,
-    };
-    await postApiData("/medicine/create", params)
-      .then(({ status }) => {
-        if (status === 200) {
-          toastAlert("success", "Successfully Added");
-          getMedicineDataAction();
-          setIsOpen(!isOpen);
-          return setFormValues(formObject);
-        }
-      })
-      .catch((err) => console.log(err));
+      await postApiData("/medicine/create", params)
+        .then(({ status }) => {
+          if (status === 200) {
+            toastAlert("success", "Successfully Added");
+            getMedicineDataAction();
+            setIsOpen(!isOpen);
+            return setFormValues(formObject);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const updateMedicineAction = async (e) => {
     e.preventDefault();
 
+    const medicineImage = imagePath
+      ? await saveImageToCloud(image)
+      : formValues?.image;
+
     const params = {
-      medicineName: formValues?.medicineName,
-      medicineId: formValues?.medicineId,
+      ...formValues,
+      image: medicineImage,
     };
 
-    await postApiData("/medicine/update", params).then((res) => {
-      const { status } = res || {};
+    console.log("params", params);
+
+    await postApiData("/medicine/update", params).then(({ status }) => {
       if (status === 200) {
         toastAlert("success", "Successfully Updated");
         getMedicineDataAction();
@@ -115,7 +115,6 @@ function Medicine() {
         return setFormValues(formObject);
       }
     });
-    return false;
   };
 
   const deleteMedicineAction = async (row) => {
@@ -174,14 +173,25 @@ function Medicine() {
   const modalDisplay = () => {
     // dito yung add modal display
     const addModal = () => {
-      return modalType === "add" ? (
+      return modalType === "add" || modalType === "update" ? (
         <div className="flex flex-col">
-          <div className="flex text-lg font-semibold text-yellow-500">
-            {modalType === "add" ? "Add New" : "Edit"} Medicine
+          <div className="flex flex-row justify-between">
+            <div className="flex text-lg font-semibold text-yellow-500">
+              {modalType === "add" ? "Add New" : "Edit"} Medicine
+            </div>
+            <div>
+              {!imagePath && modalType === "update" && (
+                <div class="avatar px-4">
+                  <div class="w-24 rounded-sm">
+                    <img src={image} alt="product-image" />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <form
             onSubmit={
-              modalType === "add" ? validateImage : updateMedicineAction
+              modalType === "add" ? newMedicineAction : updateMedicineAction
             }
             className="flex flex-row gap-4 form-control py-4"
           >
@@ -325,15 +335,15 @@ function Medicine() {
                         setImagePath(URL.createObjectURL(e.target.files[0]));
                         return setImage(e.target.files[0]);
                       }}
-                      required
+                      required={modalType !== "update"}
                     />
                   </div>
                 </div>
                 <div>
                   {imagePath && (
                     <div class="avatar px-4">
-                      <div class="w-24 rounded-sm">
-                        <img src={imagePath ?? ""} />
+                      <div class="w-24  rounded-sm">
+                        <image src={imagePath ?? null} alt="product-image" />
                       </div>
                     </div>
                   )}
@@ -414,16 +424,8 @@ function Medicine() {
     };
 
     const consumeViewModal = () => {
-      const {
-        image,
-        name,
-        categoryName,
-        strength,
-        expiration,
-        quantity,
-        reference_no,
-        description,
-      } = salesFormValues || {};
+      const { categoryName, strength, quantity, reference_no } =
+        salesFormValues || {};
 
       const displayMedicineDetails = () => {
         return salesFormValues?.id ? (
@@ -525,7 +527,12 @@ function Medicine() {
     return (
       <Dialog
         open={isOpen}
-        onClose={() => setIsOpen(!isOpen)}
+        onClose={() => {
+          setFormValues(formObject);
+          setImage("");
+          setImagePath("");
+          return setIsOpen(!isOpen);
+        }}
         className="relative z-50"
       >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -616,19 +623,8 @@ function Medicine() {
     {
       text: "Action",
       formatter: (data, row) => {
-        const { name, id } = row || {};
-
         return (
           <div className="flex flex-row gap-4">
-            {/* <div
-              onClick={() => {
-                setFormValues({ ...row, madicineId: id, madicineName: name });
-                setModalType("add");
-                return setIsOpen(!isOpen);
-              }}
-            >
-              <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
-            </div> */}
             <div
               class="customTooltip"
               data-tip="View Medicine"
@@ -639,6 +635,35 @@ function Medicine() {
               }}
             >
               <EyeIcon className="h-5 w-5 text-blue-500 cursor-pointer hover:shadow-lg" />
+            </div>
+            <div
+              class="customTooltip"
+              data-tip="Edit Medicine"
+              onClick={() => {
+                setImage(row?.image);
+                setFormValues(row);
+                setModalType("update");
+                return setIsOpen(!isOpen);
+              }}
+            >
+              <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
+            </div>
+            <div
+              onClick={() => {
+                return Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                  if (result.isConfirmed) return deleteMedicineAction(row);
+                });
+              }}
+            >
+              <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer hover:shadow-lg" />
             </div>
           </div>
         );

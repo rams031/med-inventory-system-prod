@@ -8,23 +8,14 @@ import { useEffect } from "react";
 // import { accessRoutes, accessRoutes } from "./Routes/routes";
 
 function App() {
-  const navigate = useNavigate();
-  const emailAuthorization = localStorage.getItem("email");
-
-  useEffect(() => {
-    if (emailAuthorization) return navigate('admin/medicine');
-
-     
-  }, [])
 
   return (
     <div className="App">
       <QueryParamProvider adapter={ReactRouter6Adapter}>
         <Routes>
-
           {/* Account Login Routes */}
-          {!emailAuthorization && LoginRoutes}
-          {emailAuthorization && ManagementRoutes}
+          {LoginRoutes}
+          {ManagementRoutes}
           {AccessRoutes}
         </Routes>
       </QueryParamProvider>

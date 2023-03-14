@@ -5,12 +5,14 @@ import { PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
 // Components
 import {
   deleteApiData,
+  dialogAlert,
   getApiData,
   postApiData,
   putApiData,
   toastAlert,
 } from "../../Service/Service";
 import Table from "../Table/Table";
+import Swal from "sweetalert2";
 
 function Category() {
   // Form Object
@@ -73,7 +75,6 @@ function Category() {
 
   const deleteCategoryAction = async (row) => {
     const { id } = row || {};
-    console.log(`id:`, id);
 
     const params = {
       categoryId: id,
@@ -196,7 +197,21 @@ function Category() {
             >
               <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
             </div>
-            <div onClick={() => deleteCategoryAction(row)}>
+            <div
+              onClick={() => {
+                return Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                  if (result.isConfirmed) return deleteCategoryAction(row);
+                });
+              }}
+            >
               <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer hover:shadow-lg" />
             </div>
           </div>
