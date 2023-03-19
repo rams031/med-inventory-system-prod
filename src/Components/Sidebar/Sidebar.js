@@ -1,8 +1,10 @@
 import React from "react";
+import Avatar from 'react-avatar';
 import { adminRoutes } from "./../../Routes/routes";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
+  const currentUserName = localStorage.getItem('name');
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -42,11 +44,18 @@ function Sidebar() {
                 <figure className="flex relative">
                   <div className="m-auto p-2">
                     <div className="text-lg  text-center text-yellow-800 font-semibold ">
-                      Hospital Inventory System
+                      Health Center Hospital Inventory System
                     </div>
                   </div>
                 </figure>
               </section>
+            </div>
+            <div className="py-3 px-3">
+              <div className="flex flex-row justify-center items-center gap-2 text-sm bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 font-semibold rounded-full p-2 text-center">
+                <div><Avatar name={currentUserName} size="20" round="20px"/></div>
+                <div>{currentUserName ?? "--"}</div>
+                 
+              </div>
             </div>
             <div>
               <ul className="overflow-y-auto px-2 py-4">
