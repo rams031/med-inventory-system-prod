@@ -18,7 +18,7 @@ const QrMedicine = () => {
                 <div className="text-3xl font-bold text-yellow-600 capitalize"> {medicineName ?? "--"}</div>
             </div>
             <div>
-                <img src={image} width="100" height="100" />
+                <img src={image} width="100" height="100" alt="patient-image" />
             </div>
         </div>
         <div className="p-5 shadow-lg rounded-lg flex flex-col gap-1 border-y-2 border-yellow-600">

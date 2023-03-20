@@ -1,16 +1,18 @@
-import Category from "../Components/Category/Category";
+import Category from "../Components/Admin/Category/Category";
 import Login from "../Components/Login/Login";
-import Accounts from "../Components/Accounts/Accounts";
-import Medicine from "../Components/Medicine/Medicine";
-import Patient from "../Components/Patient/Patient";
-import QrMedicine from "../Components/QRMedicine/QRMedicine";
+import Accounts from "../Components/Admin/Accounts/Accounts";
+import Medicine from "../Components/Admin/Medicine/Medicine";
+import Patient from "../Components/Admin/Patient/Patient";
+import QrMedicine from "../Components/Admin/QRMedicine/QRMedicine";
+import Barangay from "../Components/SuperAdmin/Barangay/Barangay";
+import ManageAccounts from "../Components/SuperAdmin/Accounts/ManageAccounts";
 
 export const accessRoutes = [
   {
     component: <QrMedicine />,
     path: "medicinedetails",
   },
-]
+];
 
 export const loginRoutes = [
   {
@@ -37,6 +39,19 @@ export const adminRoutes = [
   },
   {
     component: <Accounts />,
+    title: "Accounts",
+    path: "accounts",
+  },
+];
+
+export const superAdminRoutes = [
+  {
+    component: <Barangay />,
+    title: "Barangay",
+    path: "barangay",
+  },
+  {
+    component: <ManageAccounts />,
     title: "Accounts",
     path: "accounts",
   },

@@ -15,14 +15,17 @@ import {
   getApiData,
   postApiData,
   toastAlert,
-} from "../../Service/Service";
-import Table from "../Table/Table";
-import QRUrl from "../../Service/Network";
-import { saveImageToCloud } from "../../Service/Cloud";
+} from "../../../Service/Service";
+import Table from "../../Table/Table";
+import QRUrl from "../../../Service/Network";
 import Swal from "sweetalert2";
+
+import { saveImageToCloud } from "../../../Service/Cloud";
 
 function Medicine() {
   const clientName = localStorage.getItem("name");
+  const barandayID = localStorage.getItem("barangayId");
+
   // Form Object
   const formObject = {
     name: "",
@@ -59,13 +62,13 @@ function Medicine() {
 
   // HTTP Action
   const getMedicineDataAction = async () => {
-    await getApiData("/medicine").then(({ status, data }) => {
+    await getApiData("/medicine/" + barandayID).then(({ status, data }) => {
       if (status === 200) return setMedicineData(data);
     });
   };
 
   const getCategoryDataAction = async () => {
-    await getApiData("/category").then(({ status, data }) => {
+    await getApiData("/category/" + barandayID).then(({ status, data }) => {
       if (status === 200) return setCategoryData(data);
     });
   };
@@ -78,6 +81,7 @@ function Medicine() {
       const params = {
         ...formValues,
         image: cloudinary,
+        barangayId: barandayID,
       };
 
       await postApiData("/medicine/create", params)
@@ -104,8 +108,6 @@ function Medicine() {
       ...formValues,
       image: medicineImage,
     };
-
-    console.log("params", params);
 
     await postApiData("/medicine/update", params).then(({ status }) => {
       if (status === 200) {

@@ -1,8 +1,17 @@
 import { Navigate, Route } from "react-router";
-import { loginRoutes, adminRoutes, accessRoutes } from "./../Routes/routes";
+import {
+  loginRoutes,
+  adminRoutes,
+  accessRoutes,
+  superAdminRoutes,
+} from "./../Routes/routes";
 import React, { Suspense } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
-import { AdminRestriction, LoginRestriction } from "./../HOC/RouteRestriction";
+import {
+  AdminRestriction,
+  LoginRestriction,
+  SuperAdminRestriction,
+} from "./../HOC/RouteRestriction";
 
 // Account Login Navigation
 export const LoginRoutes =
@@ -55,7 +64,7 @@ export const AccessRoutes =
     );
   });
 
-export const ManagementRoutes = (
+export const AdministratorRoutes = (
   <Route
     path="admin"
     element={
@@ -67,7 +76,7 @@ export const ManagementRoutes = (
         }
       >
         {/* <AdminLayouts /> */}
-        <Sidebar />
+        <Sidebar routes={adminRoutes} pathSlice={7} />
       </React.Suspense>
     }
   >
@@ -107,6 +116,64 @@ export const ManagementRoutes = (
           }
         >
           <Navigate to="/admin/medicine" />
+        </React.Suspense>
+      }
+    />
+  </Route>
+);
+
+export const SuperAdministratorRoutes = (
+  <Route
+    path="superadmin"
+    element={
+      <React.Suspense
+        fallback={
+          <div className="min-h-screen flex justify-center align-items h-full">
+            Loading...
+          </div>
+        }
+      >
+        {/* <AdminLayouts /> */}
+        <Sidebar routes={superAdminRoutes} pathSlice={12} />
+      </React.Suspense>
+    }
+  >
+    {superAdminRoutes.length > 0 &&
+      superAdminRoutes.map((item, index) => {
+        return (
+          <>
+            <Route
+              key={index}
+              path={item.path && item?.path}
+              element={
+                <React.Suspense
+                  fallback={
+                    <div className="min-h-screen flex justify-center align-items h-full">
+                      Loading...
+                    </div>
+                  }
+                >
+                  {/* <SuperAdminRestriction> */}
+                  {item.component && item?.component}
+                  {/* </SuperAdminRestriction> */}
+                </React.Suspense>
+              }
+            />
+          </>
+        );
+      })}
+    {/* Error Directory */}
+    <Route
+      path="*"
+      element={
+        <React.Suspense
+          fallback={
+            <div className="min-h-screen flex justify-center align-items h-full">
+              Loading...
+            </div>
+          }
+        >
+          <Navigate to="/superadmin/barangay" />
         </React.Suspense>
       }
     />

@@ -20,7 +20,7 @@
 }
 
 .formSelect {
-  @apply select select-bordered w-full text-gray-400  bg-white;
+  @apply select select-bordered w-full text-gray-500 placeholder-gray-600  bg-white;
 }
 
 .modalButton { 

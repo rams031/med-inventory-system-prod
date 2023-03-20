@@ -3,18 +3,13 @@ import { Dialog } from "@headlessui/react";
 import { PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
 
 // Components
-import {
-  deleteApiData,
-  dialogAlert,
-  getApiData,
-  postApiData,
-  putApiData,
-  toastAlert,
-} from "../../Service/Service";
-import Table from "../Table/Table";
+import { getApiData, postApiData, toastAlert } from "../../../Service/Service";
+import Table from "../../Table/Table";
 import Swal from "sweetalert2";
 
 function Category() {
+  const barangayID = localStorage.getItem("barangayId");
+
   // Form Object
   const formObject = {
     categoryId: "",
@@ -33,7 +28,7 @@ function Category() {
 
   // HTTP Action
   const getCategoryDataAction = async () => {
-    await getApiData("/category").then(({ status, data }) => {
+    await getApiData("/category/" + barangayID).then(({ status, data }) => {
       if (status === 200) return setCategoryData(data);
     });
   };
@@ -41,7 +36,12 @@ function Category() {
   const newCategoryAction = async (e) => {
     e.preventDefault();
 
-    await postApiData("/category/create", formValues).then((res) => {
+    const params = {
+      ...formValues,
+      barangayId: barangayID,
+    };
+
+    await postApiData("/category/create", params).then((res) => {
       const { status } = res || {};
       if (status === 200) {
         toastAlert("success", "Successfully Added");

@@ -45,12 +45,16 @@ function Login() {
             return setShowLoading(false);
           }
 
-          const { fullname, email } = data[0] || {};
+          const { fullname, email, accountType, barangayId } = data[0] || {};
           localStorage.setItem("name", fullname);
           localStorage.setItem("email", email);
+          localStorage.setItem("accountType", accountType);
+          localStorage.setItem("barangayId", barangayId);
 
           toastAlert("success", "Log in Successfully");
-          return navigate("/admin/medicine");
+          if (accountType === "admin") return navigate("/admin/medicine");
+
+          return navigate("/superadmin/barangay");
         }
       })
       .catch((err) => {
@@ -64,7 +68,6 @@ function Login() {
     const { password, confirmpassword } = registerFormValues || {};
     if (password !== confirmpassword)
       return toastAlert("error", "Make sure to apply same password");
-    console.log("registerFormValues", registerFormValues);
     await postApiData("/account/create", registerFormValues)
       .then(({ status }) => {
         if (status === 200) {
@@ -124,13 +127,14 @@ function Login() {
             class="formInput"
           />
         </div>
-        <div className="flex flex-row justify-between items-center pt-2">
-          <div
+        <div className="flex flex-row justify-end items-center pt-2">
+          {/* Temporary */}
+          {/* <div
             onClick={() => setUserView("register")}
             class="btn bg-yellow-500 text-white border-0"
           >
             Register
-          </div>
+          </div> */}
 
           {showLoading && (
             <svg
