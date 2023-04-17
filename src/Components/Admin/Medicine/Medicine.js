@@ -7,7 +7,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/outline";
 import QRCode from "react-qr-code";
-import axios from "axios";
+import Select from "react-select";
 
 // Components
 import {
@@ -47,6 +47,7 @@ function Medicine() {
   // Local State // dito nilalagay yung mga var
   const [salesFormValues, setSalesFormValues] = useState(salesFormObject);
   const [formValues, setFormValues] = useState(formObject);
+  const [medicineSelection, setMedicineSelection] = useState([]);
   const [medicineData, setMedicineData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [modalType, setModalType] = useState("");
@@ -63,7 +64,20 @@ function Medicine() {
   // HTTP Action
   const getMedicineDataAction = async () => {
     await getApiData("/medicine/" + barandayID).then(({ status, data }) => {
-      if (status === 200) return setMedicineData(data);
+      if (status === 200 && data) {
+        const medicineListSelect = [];
+
+        data.map((item) =>
+          medicineListSelect.push({
+            ...item,
+            value: item?.id,
+            label: item?.name,
+          })
+        );
+
+        setMedicineSelection(medicineListSelect);
+        return setMedicineData(data);
+      }
     });
   };
 
@@ -388,38 +402,49 @@ function Medicine() {
       const scannerURL = `${QRUrl}/medicinedetails?image=${image}&name=${name}&categoryName=${categoryName}&strength=${strength}&expiration=${expiration}&quantity=${quantity}&reference_no=${reference_no}&description=${description}`;
 
       return modalType === "view" ? (
-        <div className="flex flex-row gap-10 p-10">
-          <div className="flex flex-col">
-            <div className="flex justify-start text-xl font-bold text-yellow-500 pb-5">
-              View Medicine Information
-            </div>
-            <div className="text-gray-500">Medicine Name: {name ?? "--"}</div>
-            <div className="text-gray-500">
-              Category Name: {categoryName ?? "--"}
-            </div>
-            <div className="text-gray-500">
-              Reference No: {reference_no ?? "--"}
-            </div>
-            <div className="text-gray-500">Strength: {strength ?? "--"}</div>
-            <div className="text-gray-500">
-              Expiration: {expiration ?? "--"}
-            </div>
-            <div className="text-gray-500">Quantity: {quantity ?? "--"}</div>
-            <div className="text-gray-500">
-              Ingredients: {description ?? "--"}
-            </div>
-            {/* <div className="text-gray-500">{scannerURL}</div> */}
+        <div className="flex flex-col">
+          <div className="flex justify-end">
+            <label
+              for="my-modal-3"
+              class="btn btn-sm btn-circle bg-yellow-600 border-yellow-600"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              ✕
+            </label>
           </div>
-          <div className="flex flex-col gap-6 justify-center items-center">
-            <div>
-              <QRCode
-                size={150}
-                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={scannerURL}
-                viewBox={`0 0 256 256`}
-              />
+          <div className="flex flex-row gap-10 p-10">
+            <div className="flex flex-col">
+              <div className="flex justify-start text-xl font-bold text-yellow-500 pb-5">
+                View Medicine Information
+              </div>
+              <div className="text-gray-500">Medicine Name: {name ?? "--"}</div>
+              <div className="text-gray-500">
+                Category Name: {categoryName ?? "--"}
+              </div>
+              <div className="text-gray-500">
+                Reference No: {reference_no ?? "--"}
+              </div>
+              <div className="text-gray-500">Strength: {strength ?? "--"}</div>
+              <div className="text-gray-500">
+                Expiration: {expiration ?? "--"}
+              </div>
+              <div className="text-gray-500">Quantity: {quantity ?? "--"}</div>
+              <div className="text-gray-500">
+                Ingredients: {description ?? "--"}
+              </div>
+              {/* <div className="text-gray-500">{scannerURL}</div> */}
             </div>
-            <img src={image} width="150" alt="none" height="150" />
+            <div className="flex flex-col gap-6 justify-center items-center">
+              <div>
+                <QRCode
+                  size={150}
+                  style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                  value={scannerURL}
+                  viewBox={`0 0 256 256`}
+                />
+              </div>
+              <img src={image} width="150" alt="none" height="150" />
+            </div>
           </div>
         </div>
       ) : null;
@@ -471,30 +496,24 @@ function Medicine() {
                 <label class="label">
                   <span class="label-text">Medicine</span>
                 </label>
-                <select
-                  name="id"
-                  class="formSelect"
-                  // value={salesFormValues?.name}
-                  onChange={(e) =>
+                <Select
+                  classNames={{
+                    control: (state) =>
+                      state.isFocused ? "border-yellow-600" : "border-red-300",
+                  }}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable
+                  isSearchable
+                  onChange={(e) => {
                     setSalesFormValues({
                       ...salesFormValues,
-                      ...JSON.parse(e.target.value),
-                    })
-                  }
-                  required
-                >
-                  <option disabled selected>
-                    Pick Medicine
-                  </option>
-                  {medicineData &&
-                    medicineData.map((item) => {
-                      return (
-                        <option key={item?.id} value={JSON.stringify(item)}>
-                          {item?.name ?? null}
-                        </option>
-                      );
-                    })}
-                </select>
+                      ...e,
+                    });
+                  }}
+                  name="medicine"
+                  options={medicineSelection}
+                />
               </div>
               {displayMedicineDetails()}
               <div>
@@ -512,11 +531,16 @@ function Medicine() {
                   required
                 />
               </div>
-              <div className="flex justify-end pt-4">
+              <div className="flex flex-row justify-end gap-2 mt-2">
                 <button
-                  type="submit"
-                  className="btn bg-yellow-500 text-white border-0"
+                  className="modalButton"
+                  onClick={() => {
+                    return setIsOpen(!isOpen);
+                  }}
                 >
+                  Cancel
+                </button>
+                <button type="submit" className="modalButton">
                   Take Medicine
                 </button>
               </div>

@@ -14,7 +14,6 @@ export const saveImageToCloud = async (image) => {
       if (status === 200 && data) {
         const { secure_url } = data || {};
         return secure_url;
-        // return newMedicineAction(secure_url);
       }
     })
     .catch((error) => error);

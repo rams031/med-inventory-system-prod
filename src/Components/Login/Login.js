@@ -45,11 +45,14 @@ function Login() {
             return setShowLoading(false);
           }
 
-          const { fullname, email, accountType, barangayId } = data[0] || {};
+          console.log("data[0]", data[0])
+          const { fullname, email, accountType, barangayId, tokenBearer } =
+            data[0] || {};
           localStorage.setItem("name", fullname);
           localStorage.setItem("email", email);
           localStorage.setItem("accountType", accountType);
           localStorage.setItem("barangayId", barangayId);
+          localStorage.setItem("token", tokenBearer);
 
           toastAlert("success", "Log in Successfully");
           if (accountType === "admin") return navigate("/admin/medicine");
