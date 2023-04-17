@@ -82,8 +82,8 @@ function Sidebar({ routes, pathSlice }) {
               </section>
             </div>
             <div className="py-3 px-5">
-              <div className="flex  justify-center gap-2 text-sm bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 font-semibold rounded-full p-2 text-center">
-                <div className="flex flex-row gap-1">
+              <div className="flex  justify-center   gap-2 text-sm bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 font-semibold rounded-full p-2 text-center">
+                <div className="flex flex-row justify-center  items-center gap-1 px-2">
                   <div>
                     <Avatar name={currentUserName} size="20" round="20px" />
                   </div>

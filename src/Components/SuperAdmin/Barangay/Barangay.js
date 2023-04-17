@@ -5,6 +5,7 @@ import { Dialog } from "@headlessui/react";
 import { getApiData, postApiData, toastAlert } from "../../../Service/Service";
 import { saveImageToCloud } from "../../../Service/Cloud";
 import Table from "../../Table/Table";
+import { PencilAltIcon } from "@heroicons/react/outline";
 
 const Barangay = () => {
   const formObject = {
@@ -59,6 +60,27 @@ const Barangay = () => {
       dataField: "barangayAddress",
       text: "Barangay Address",
     },
+    {
+      dataField: "id",
+      text: "Action",
+      formatter: (data, row) => {
+        const { name, id } = row || {};
+
+        return (
+          <div className="flex flex-row gap-4">
+            <div
+              onClick={() => {
+                setFormValues({ ...row, categoryId: id, categoryName: name });
+                setModalType("update");
+                return setIsOpen(!isOpen);
+              }}
+            >
+              <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
+            </div>
+          </div>
+        );
+      },
+    },
   ];
 
   // HTTP Action
@@ -93,6 +115,28 @@ const Barangay = () => {
     }
   };
 
+  const updateBarangayAction = async (e) => {
+    e.preventDefault();
+
+    const barangayImage = imagePath
+      ? await saveImageToCloud(image)
+      : formValues?.barangayLogo;
+
+    const params = {
+      ...formValues,
+      barangayLogo: barangayImage,
+    };
+
+    await postApiData("/barangay/update", params).then(({ status }) => {
+      if (status === 200) {
+        toastAlert("success", "Successfully Updated");
+        getBarangayDataAction();
+        setIsOpen(!isOpen);
+        return setFormValues(formObject);
+      }
+    });
+  };
+
   const inputOnChange = (e) => {
     const {
       target: { value, name },
@@ -112,11 +156,30 @@ const Barangay = () => {
         <div className="fixed inset-0 flex items-center justify-center">
           <Dialog.Panel className="w-full max-w-sm bg-white rounded-md p-5 shadow-lg">
             <div className="flex flex-col">
-              <div className="flex text-lg font-semibold text-yellow-500">
-                {modalType === "add" ? "Add New" : "Edit"} Barangay
+              <div className="flex flex-row justify-between">
+                <div className="flex flex-col">
+                  <div className="flex text-lg font-semibold text-yellow-500">
+                    {modalType === "add" ? "Add New" : "Edit"} Barangay
+                  </div>
+                </div>
+
+                {modalType === "update" && (
+                  <figure className="flex flex-row gap-2">
+                    <div className="m-1 flex flex-col items-center justify-center">
+                      <img
+                        className="h-7 w-7 border-1 rounded-lg object-scale-down"
+                        alt="barangay-photo"
+                        src={formValues?.barangayLogo ?? null}
+                      />
+                    </div>
+                  </figure>
+                )}
               </div>
+
               <form
-                onSubmit={newBarangayAction}
+                onSubmit={
+                  modalType === "add" ? newBarangayAction : updateBarangayAction
+                }
                 className="flex flex-col gap-4 form-control py-4"
               >
                 <div>
@@ -181,7 +244,6 @@ const Barangay = () => {
                   <button
                     className="modalButton"
                     onClick={() => {
-                      // setFormValues(formObject);
                       return setIsOpen(!isOpen);
                     }}
                   >

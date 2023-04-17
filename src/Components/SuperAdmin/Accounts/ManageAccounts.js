@@ -4,6 +4,8 @@ import { Dialog } from "@headlessui/react";
 // Components
 import { getApiData, postApiData, toastAlert } from "../../../Service/Service";
 import Table from "../../Table/Table";
+import { PencilAltIcon, TrashIcon } from "@heroicons/react/outline";
+import Swal from "sweetalert2";
 
 function ManageAccounts() {
   const formObject = {
@@ -42,7 +44,7 @@ function ManageAccounts() {
     });
   };
 
-  const registerAction = async (e) => {
+  const newAccountAction = async (e) => {
     e.preventDefault();
 
     const params = {
@@ -65,6 +67,49 @@ function ManageAccounts() {
       .catch((err) => {
         console.log("err", err);
       });
+  };
+
+  const updateAccountAction = async (e) => {
+    e.preventDefault();
+
+    const params = {
+      ...formValues,
+      accountType: accountOption ? "superAdmin" : "admin",
+      barangayId: accountOption ? null : formValues?.barangayId,
+    };
+
+    if (!accountOption && formValues?.barangayId === null)
+      return toastAlert("error", "Make Sure To Select Barangay.");
+    await postApiData("/account/update", params)
+      .then(({ status }) => {
+        if (status === 200) {
+          toastAlert("success", "Account Successfully Created");
+          getAccountsDataAction();
+          setIsOpen(!isOpen);
+          return setFormValues(formObject);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+
+  const deleteAccountAction = async (row) => {
+    const { id } = row || {};
+
+    const params = {
+      categoryId: id,
+    };
+
+    await postApiData("/account/delete", params).then((res) => {
+      const { status } = res || {};
+      if (status === 200) {
+        toastAlert("success", "Successfully Deleted");
+        getAccountsDataAction();
+        return setFormValues(formObject);
+      }
+    });
+    return false;
   };
 
   const inputOnChange = (e) => {
@@ -100,20 +145,52 @@ function ManageAccounts() {
       },
     },
     {
-      dataField: "fullname",
-      text: "Account Name",
-    },
-    {
       dataField: "email",
       text: "Account Email",
+    },
+    {
+      dataField: "fullname",
+      text: "Account Name",
     },
     {
       dataField: "username",
       text: "Account Username",
     },
     {
-      dataField: "address",
-      text: "Account Address",
+      dataField: "id",
+      text: "Action",
+      formatter: (data, row) => {
+        return (
+          <div className="flex flex-row gap-4">
+            <div
+              onClick={() => {
+                setFormValues(row);
+                setModalType("update");
+                return setIsOpen(!isOpen);
+              }}
+            >
+              <PencilAltIcon className="h-5 w-5 text-yellow-700 cursor-pointer hover:shadow-lg" />
+            </div>
+            <div
+              onClick={() => {
+                return Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                  if (result.isConfirmed) return deleteAccountAction(row);
+                });
+              }}
+            >
+              <TrashIcon className="h-5 w-5 text-red-500 cursor-pointer hover:shadow-lg" />
+            </div>
+          </div>
+        );
+      },
     },
   ];
 
@@ -132,7 +209,9 @@ function ManageAccounts() {
                 {modalType === "add" ? "Add New" : "Edit"} Account
               </div>
               <form
-                onSubmit={registerAction}
+                onSubmit={
+                  modalType === "add" ? newAccountAction : updateAccountAction
+                }
                 class="form-control flex flex-col gap-2"
               >
                 <div className="flex flex-col gap-4">
@@ -237,23 +316,33 @@ function ManageAccounts() {
                       class="formInputModal w-full"
                     />
                   </div>
-                  <div>
-                    <label class="label">
-                      <span class="label-text">Password</span>
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formValues.password}
-                      onChange={inputOnChange}
-                      required
-                      placeholder="Password"
-                      class="formInputModal w-full"
-                    />
-                  </div>
-                  <div className="flex justify-end pt-2">
-                    <button class="btn bg-yellow-500 text-white border-0">
-                      Add Account
+                  {modalType === "add" && (
+                    <div>
+                      <label class="label">
+                        <span class="label-text">Password</span>
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        value={formValues.password}
+                        onChange={inputOnChange}
+                        required
+                        placeholder="Password"
+                        class="formInputModal w-full"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-row justify-end gap-2 mt-2">
+                    <button
+                      className="modalButton"
+                      onClick={() => {
+                        return setIsOpen(!isOpen);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button class="modalButton">
+                      {modalType === "add" ? "Add" : "Edit"} Account
                     </button>
                   </div>
                 </div>
